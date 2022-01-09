@@ -1,6 +1,9 @@
 import 'package:cidade_singular_admin/app/screens/home/home_store.dart';
+import 'package:cidade_singular_admin/app/screens/singularities/singularities_page.dart';
+import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -29,9 +32,9 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
 
   List<MenuPage> pages = [
     MenuPage(
-      name: "Page 1",
-      icon: Icons.home,
-      page: Scaffold(backgroundColor: Colors.blueAccent),
+      name: "Lugares",
+      svgIconPath: "assets/images/places.svg",
+      page: SingularitiesPage(),
     ),
     MenuPage(
       name: "Page 2",
@@ -54,32 +57,42 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
         selected: currentPage == i,
         title: page.name,
         icon: page.icon,
+        svgIconPath: page.svgIconPath,
         onPressed: () => pageController.jumpToPage(i),
       ));
     }
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 75,
-        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(4, 4),
-              blurRadius: 5,
-              color: Colors.black26,
-            )
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: menuItens,
-        ),
-      ),
-      body: PageView(
-        controller: pageController,
-        children: pages.map((p) => p.page).toList(),
+      body: Stack(
+        children: [
+          PageView(
+            controller: pageController,
+            children: pages.map((p) => p.page).toList(),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            left: 0,
+            child: Container(
+              height: 75,
+              margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(4, 4),
+                    blurRadius: 5,
+                    color: Colors.black26,
+                  )
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: menuItens,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -87,7 +100,8 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
   Widget menuItemWidget({
     required String title,
     required VoidCallback onPressed,
-    required IconData icon,
+    IconData? icon,
+    String? svgIconPath,
     bool selected = false,
   }) {
     return InkWell(
@@ -95,15 +109,26 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.home,
-            size: selected ? 28 : 24,
-            color: selected ? Colors.indigo : Color(0xFF898A96),
-          ),
+          svgIconPath == null
+              ? Icon(
+                  Icons.home,
+                  size: selected ? 28 : 24,
+                  color: selected
+                      ? Constants.primaryColor
+                      : Constants.disableColor,
+                )
+              : SvgPicture.asset(
+                  svgIconPath,
+                  color: selected
+                      ? Constants.primaryColor
+                      : Constants.disableColor,
+                  width: selected ? 28 : 24,
+                  height: selected ? 28 : 24,
+                ),
           Text(
             title,
             style: TextStyle(
-              color: selected ? Colors.indigo : Color(0xFF898A96),
+              color: selected ? Constants.primaryColor : Constants.disableColor,
               fontWeight: selected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -115,8 +140,14 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
 
 class MenuPage {
   String name;
-  IconData icon;
+  IconData? icon;
+  String? svgIconPath;
   Widget page;
 
-  MenuPage({required this.name, required this.icon, required this.page});
+  MenuPage({
+    required this.name,
+    required this.page,
+    this.icon,
+    this.svgIconPath,
+  });
 }
