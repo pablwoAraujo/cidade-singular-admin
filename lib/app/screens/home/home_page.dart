@@ -1,8 +1,6 @@
-import 'package:cidade_singular_admin/app/screens/home/home_store.dart';
 import 'package:cidade_singular_admin/app/screens/singularities/singularities_page.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,7 +11,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends ModularState<HomePage, HomeStore> {
+class _HomePageState extends State<HomePage> {
   PageController pageController = PageController();
   int currentPage = 0;
 

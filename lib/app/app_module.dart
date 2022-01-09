@@ -1,6 +1,5 @@
+import 'package:cidade_singular_admin/app/screens/home/home_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-
-import 'screens/home/home_module.dart';
 
 class AppModule extends Module {
   @override
@@ -8,6 +7,6 @@ class AppModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ModuleRoute(Modular.initialRoute, module: HomeModule()),
+    ChildRoute(Modular.initialRoute, child: (ctx, args) => HomePage())
   ];
 }
