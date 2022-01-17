@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cidade_singular_admin/app/screens/singularities/address_search.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class AddSingularityPage extends StatefulWidget {
@@ -39,7 +42,18 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
   TextEditingController visitingHoursInitTextEdtCtrl = TextEditingController();
   TextEditingController visitingHoursEndTextEdtCtrl = TextEditingController();
 
-  TimeOfDay selectedTime = TimeOfDay.now();
+  final ImagePicker picker = ImagePicker();
+
+  List<XFile> images = [];
+
+  void pickImage() async {
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        images.add(image);
+      });
+    }
+  }
 
   List<VisitingHours> dayHour = [
     VisitingHours(day: "Seg"),
@@ -98,6 +112,60 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                       });
                     }
                   },
+                ),
+                SizedBox(height: 16),
+                Text(
+                  "Fotos",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Constants.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Constants.grey,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: [
+                      ...images.map(
+                        (image) => ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.file(
+                            File(image.path),
+                            fit: BoxFit.cover,
+                            height: 100,
+                            width: 100,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: pickImage,
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white70,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "+",
+                              style: TextStyle(
+                                fontSize: 36,
+                                color: Constants.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(height: 16),
                 Text(
@@ -248,7 +316,9 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
         width: 70,
         padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
         decoration: BoxDecoration(
-            color: Constants.grey, borderRadius: BorderRadius.circular(20)),
+          color: Constants.grey,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Row(
           children: [
             SvgPicture.asset(

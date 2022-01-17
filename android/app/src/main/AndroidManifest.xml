@@ -2,6 +2,7 @@
     package="com.example.cidade_singular_admin">
    <application
         android:label="cidade_singular_admin"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
