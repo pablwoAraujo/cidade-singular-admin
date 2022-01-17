@@ -1,5 +1,4 @@
 import 'package:cidade_singular_admin/app/screens/singularities/address_search.dart';
-import 'package:cidade_singular_admin/app/services/place_service.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,6 +22,16 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
   TextEditingController visitingHoursEndTextEdtCtrl = TextEditingController();
 
   TimeOfDay selectedTime = TimeOfDay.now();
+
+  List dayHour = [
+    {"day": "Seg", "open": true, "hourInit": "", "hourEnd": ""},
+    {"day": "Ter", "open": true, "hourInit": "", "hourEnd": ""},
+    {"day": "Qua", "open": true, "hourInit": "", "hourEnd": ""},
+    {"day": "Qui", "open": true, "hourInit": "", "hourEnd": ""},
+    {"day": "Sex", "open": true, "hourInit": "", "hourEnd": ""},
+    {"day": "Sáb", "open": true, "hourInit": "", "hourEnd": ""},
+    {"day": "Dom", "open": true, "hourInit": "", "hourEnd": ""}
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +75,6 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                       query: addressTextEdtCtrl.text,
                     );
                     if (result != null) {
-                      print(result);
                       setState(() {
                         addressTextEdtCtrl.text = result.description;
                       });
@@ -83,20 +91,60 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    buildTimeImput(
-                      context: context,
-                      title: "Início",
-                      textEditingController: visitingHoursInitTextEdtCtrl,
-                    ),
-                    buildTimeImput(
-                      context: context,
-                      title: "Fim",
-                      textEditingController: visitingHoursEndTextEdtCtrl,
-                    ),
-                  ],
+                ...dayHour.map(
+                  (day) => Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        child: SwitchListTile(
+                          title: Text(
+                            day["day"],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          value: day["open"],
+                          onChanged: (value) {
+                            setState(() {
+                              day["open"] = value;
+                            });
+                          },
+                        ),
+                      ),
+                      if (day["open"])
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              buildTimeImput(
+                                context: context,
+                                title: "Início",
+                                hour: day["hourInit"],
+                                onSelect: (hour) {
+                                  setState(() {
+                                    day["hourInit"] = hour;
+                                  });
+                                },
+                              ),
+                              SizedBox(width: 5),
+                              Text("ás"),
+                              SizedBox(width: 5),
+                              buildTimeImput(
+                                context: context,
+                                title: "Fim",
+                                hour: day["hourEnd"],
+                                onSelect: (hour) {
+                                  setState(() {
+                                    day["hourEnd"] = hour;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20),
                 Center(
@@ -137,53 +185,56 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
     );
   }
 
-  Widget buildTimeImput(
-      {required BuildContext context,
-      required TextEditingController textEditingController,
-      required String title}) {
-    return SizedBox(
-      width: 150,
-      child: buildFormField(
-          title: title,
-          readOnly: true,
-          titleStyle: TextStyle(),
-          controller: textEditingController,
-          prefixIcon: Container(
-            padding: EdgeInsets.all(10),
-            child: SvgPicture.asset(
+  Widget buildTimeImput({
+    required BuildContext context,
+    required String hour,
+    required String title,
+    required Function(String) onSelect,
+  }) {
+    return GestureDetector(
+      onTap: () async {
+        final TimeOfDay? newTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay(hour: 8, minute: 0),
+          cancelText: "CANCELAR",
+          confirmText: "CONFIRMAR",
+          helpText: "Horário de visitação - $title",
+          builder: (BuildContext context, Widget? child) {
+            return MediaQuery(
+              data:
+                  MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+              child: child!,
+            );
+          },
+        );
+        if (newTime != null) {
+          String hourFormated =
+              "${newTime.hour.toString().padLeft(2, "0")}:${newTime.minute.toString().padLeft(2, "0")}";
+          onSelect(hourFormated);
+        }
+      },
+      child: Container(
+        width: 70,
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+        decoration: BoxDecoration(
+            color: Constants.grey, borderRadius: BorderRadius.circular(20)),
+        child: Row(
+          children: [
+            SvgPicture.asset(
               "assets/images/hour.svg",
-              width: 10,
+              width: 15,
               fit: BoxFit.contain,
             ),
-          ),
-          onTap: () async {
-            final TimeOfDay? newTime = await showTimePicker(
-              context: context,
-              initialTime: TimeOfDay(hour: 8, minute: 0),
-              cancelText: "CANCELAR",
-              confirmText: "CONFIRMAR",
-              helpText: "Horário de visitação - $title",
-              builder: (BuildContext context, Widget? child) {
-                return MediaQuery(
-                  data: MediaQuery.of(context)
-                      .copyWith(alwaysUse24HourFormat: true),
-                  child: child!,
-                );
-              },
-            );
-            if (newTime != null) {
-              String hourFormated =
-                  "${newTime.hour.toString().padLeft(2, "0")}:${newTime.minute.toString().padLeft(2, "0")} h";
-              setState(() {
-                textEditingController.text = hourFormated;
-              });
-            }
-          }),
+            SizedBox(width: 3),
+            Text(hour)
+          ],
+        ),
+      ),
     );
   }
 
   Widget buildFormField({
-    required String title,
+    String? title,
     required TextEditingController controller,
     int minLines = 1,
     String? Function(String?)? validator,
@@ -195,15 +246,16 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: titleStyle ??
-              TextStyle(
-                fontSize: 18,
-                color: Constants.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
+        if (title != null)
+          Text(
+            title,
+            style: titleStyle ??
+                TextStyle(
+                  fontSize: 18,
+                  color: Constants.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
         TextFormField(
           onTap: onTap,
           readOnly: readOnly,
@@ -235,18 +287,5 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
       return "Campo não pode ser vazio";
     }
     return null;
-  }
-
-  _selectTime(BuildContext context) async {
-    final TimeOfDay? timeOfDay = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-      initialEntryMode: TimePickerEntryMode.dial,
-    );
-    if (timeOfDay != null && timeOfDay != selectedTime) {
-      setState(() {
-        selectedTime = timeOfDay;
-      });
-    }
   }
 }
