@@ -13,6 +13,24 @@ class AddSingularityPage extends StatefulWidget {
   _AddSingularityPageState createState() => _AddSingularityPageState();
 }
 
+class VisitingHours {
+  String day;
+  bool open = false;
+  String hourInit = "";
+  String hourEnd = "";
+  bool valid = true;
+
+  VisitingHours({
+    required this.day,
+  });
+
+  void validate() {
+    if (open) {
+      valid = hourInit.isNotEmpty && hourEnd.isNotEmpty;
+    }
+  }
+}
+
 class _AddSingularityPageState extends State<AddSingularityPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController titleTextEdtCtrl = TextEditingController();
@@ -23,14 +41,14 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
 
   TimeOfDay selectedTime = TimeOfDay.now();
 
-  List dayHour = [
-    {"day": "Seg", "open": true, "hourInit": "", "hourEnd": ""},
-    {"day": "Ter", "open": true, "hourInit": "", "hourEnd": ""},
-    {"day": "Qua", "open": true, "hourInit": "", "hourEnd": ""},
-    {"day": "Qui", "open": true, "hourInit": "", "hourEnd": ""},
-    {"day": "Sex", "open": true, "hourInit": "", "hourEnd": ""},
-    {"day": "Sáb", "open": true, "hourInit": "", "hourEnd": ""},
-    {"day": "Dom", "open": true, "hourInit": "", "hourEnd": ""}
+  List<VisitingHours> dayHour = [
+    VisitingHours(day: "Seg"),
+    VisitingHours(day: "Ter"),
+    VisitingHours(day: "Qua"),
+    VisitingHours(day: "Qui"),
+    VisitingHours(day: "Sex"),
+    VisitingHours(day: "Sáb"),
+    VisitingHours(day: "Dom"),
   ];
 
   @override
@@ -99,48 +117,57 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                         width: 150,
                         child: SwitchListTile(
                           title: Text(
-                            day["day"],
+                            day.day,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          value: day["open"],
+                          value: day.open,
                           onChanged: (value) {
                             setState(() {
-                              day["open"] = value;
+                              day.open = value;
                             });
                           },
                         ),
                       ),
-                      if (day["open"])
+                      if (day.open)
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              buildTimeImput(
-                                context: context,
-                                title: "Início",
-                                hour: day["hourInit"],
-                                onSelect: (hour) {
-                                  setState(() {
-                                    day["hourInit"] = hour;
-                                  });
-                                },
-                              ),
-                              SizedBox(width: 5),
-                              Text("ás"),
-                              SizedBox(width: 5),
-                              buildTimeImput(
-                                context: context,
-                                title: "Fim",
-                                hour: day["hourEnd"],
-                                onSelect: (hour) {
-                                  setState(() {
-                                    day["hourEnd"] = hour;
-                                  });
-                                },
-                              ),
-                            ],
+                          child: Container(
+                            padding: EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              border: day.valid
+                                  ? null
+                                  : Border.all(color: Colors.red),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                buildTimeImput(
+                                  context: context,
+                                  title: "Início",
+                                  hour: day.hourInit,
+                                  onSelect: (hour) {
+                                    setState(() {
+                                      day.hourInit = hour;
+                                    });
+                                  },
+                                ),
+                                SizedBox(width: 5),
+                                Text("ás"),
+                                SizedBox(width: 5),
+                                buildTimeImput(
+                                  context: context,
+                                  title: "Fim",
+                                  hour: day.hourEnd,
+                                  onSelect: (hour) {
+                                    setState(() {
+                                      day.hourEnd = hour;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                     ],
@@ -151,6 +178,10 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                   child: GestureDetector(
                     onTap: () {
                       _formKey.currentState?.validate();
+
+                      setState(() {
+                        dayHour.forEach((day) => day.validate());
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(
