@@ -39,6 +39,8 @@ dependencies:
   flutter_mobx: ^2.0.2
   build_runner: ^2.1.5
   flutter_svg: ^1.0.0
+  dio: ^4.0.4
+  uuid: ^3.0.5
 
 dev_dependencies:
   flutter_test:
