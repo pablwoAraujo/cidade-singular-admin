@@ -17,6 +17,7 @@ class _SingularitiesPageState extends State<SingularitiesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Singularidades"),
+        leading: Container(),
       ),
       body: Stack(
         children: [

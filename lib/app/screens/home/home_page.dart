@@ -7,6 +7,8 @@ class HomePage extends StatefulWidget {
   final String title;
   const HomePage({Key? key, this.title = "Home"}) : super(key: key);
 
+  static String routeName = "/home";
+
   @override
   _HomePageState createState() => _HomePageState();
 }
