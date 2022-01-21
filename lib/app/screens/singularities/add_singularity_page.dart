@@ -39,8 +39,7 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
   TextEditingController titleTextEdtCtrl = TextEditingController();
   TextEditingController descriptionTextEdtCtrl = TextEditingController();
   TextEditingController addressTextEdtCtrl = TextEditingController();
-  TextEditingController visitingHoursInitTextEdtCtrl = TextEditingController();
-  TextEditingController visitingHoursEndTextEdtCtrl = TextEditingController();
+  TextEditingController visitingHoursTextEdtCtrl = TextEditingController();
 
   final ImagePicker picker = ImagePicker();
 
@@ -54,16 +53,6 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
       });
     }
   }
-
-  List<VisitingHours> dayHour = [
-    VisitingHours(day: "Seg"),
-    VisitingHours(day: "Ter"),
-    VisitingHours(day: "Qua"),
-    VisitingHours(day: "Qui"),
-    VisitingHours(day: "Sex"),
-    VisitingHours(day: "Sáb"),
-    VisitingHours(day: "Dom"),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +101,19 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                       });
                     }
                   },
+                ),
+                SizedBox(height: 16),
+                buildFormField(
+                  title: "Horário de visitação",
+                  controller: visitingHoursTextEdtCtrl,
+                  prefixIcon: Container(
+                    padding: EdgeInsets.all(10),
+                    child: SvgPicture.asset(
+                      "assets/images/hour.svg",
+                      width: 10,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
                 SizedBox(height: 16),
                 Text(
@@ -167,89 +169,11 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 16),
-                Text(
-                  "Horário de visitação",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Constants.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 10),
-                ...dayHour.map(
-                  (day) => Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 150,
-                        child: SwitchListTile(
-                          title: Text(
-                            day.day,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          value: day.open,
-                          onChanged: (value) {
-                            setState(() {
-                              day.open = value;
-                            });
-                          },
-                        ),
-                      ),
-                      if (day.open)
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              border: day.valid
-                                  ? null
-                                  : Border.all(color: Colors.red),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                buildTimeImput(
-                                  context: context,
-                                  title: "Início",
-                                  hour: day.hourInit,
-                                  onSelect: (hour) {
-                                    setState(() {
-                                      day.hourInit = hour;
-                                    });
-                                  },
-                                ),
-                                SizedBox(width: 5),
-                                Text("ás"),
-                                SizedBox(width: 5),
-                                buildTimeImput(
-                                  context: context,
-                                  title: "Fim",
-                                  hour: day.hourEnd,
-                                  onSelect: (hour) {
-                                    setState(() {
-                                      day.hourEnd = hour;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
                 SizedBox(height: 20),
                 Center(
                   child: GestureDetector(
                     onTap: () {
                       _formKey.currentState?.validate();
-
-                      setState(() {
-                        dayHour.forEach((day) => day.validate());
-                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -276,59 +200,10 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 30),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTimeImput({
-    required BuildContext context,
-    required String hour,
-    required String title,
-    required Function(String) onSelect,
-  }) {
-    return GestureDetector(
-      onTap: () async {
-        final TimeOfDay? newTime = await showTimePicker(
-          context: context,
-          initialTime: TimeOfDay(hour: 8, minute: 0),
-          cancelText: "CANCELAR",
-          confirmText: "CONFIRMAR",
-          helpText: "Horário de visitação - $title",
-          builder: (BuildContext context, Widget? child) {
-            return MediaQuery(
-              data:
-                  MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-              child: child!,
-            );
-          },
-        );
-        if (newTime != null) {
-          String hourFormated =
-              "${newTime.hour.toString().padLeft(2, "0")}:${newTime.minute.toString().padLeft(2, "0")}";
-          onSelect(hourFormated);
-        }
-      },
-      child: Container(
-        width: 70,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-        decoration: BoxDecoration(
-          color: Constants.grey,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          children: [
-            SvgPicture.asset(
-              "assets/images/hour.svg",
-              width: 15,
-              fit: BoxFit.contain,
-            ),
-            SizedBox(width: 3),
-            Text(hour)
-          ],
         ),
       ),
     );
