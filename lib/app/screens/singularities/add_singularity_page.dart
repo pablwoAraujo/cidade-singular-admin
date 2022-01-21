@@ -54,6 +54,8 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
     }
   }
 
+  bool validImages = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,13 +137,46 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                     runSpacing: 10,
                     children: [
                       ...images.map(
-                        (image) => ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.file(
-                            File(image.path),
-                            fit: BoxFit.cover,
-                            height: 100,
-                            width: 100,
+                        (image) => SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.file(
+                                    File(image.path),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: -5,
+                                right: -5,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      images.remove(image);
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 25,
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Colors.deepOrange.shade300,
+                                    ),
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -169,11 +204,27 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                     ],
                   ),
                 ),
+                if (!validImages)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5, left: 16),
+                    child: Text(
+                      "Adicione ao menos uma foto!",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.red.shade900,
+                      ),
+                    ),
+                  ),
                 SizedBox(height: 20),
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      _formKey.currentState?.validate();
+                      if (images.isEmpty) {
+                        setState(() {
+                          validImages = false;
+                        });
+                      }
+                      if (_formKey.currentState?.validate() ?? false) {}
                     },
                     child: Container(
                       decoration: BoxDecoration(
