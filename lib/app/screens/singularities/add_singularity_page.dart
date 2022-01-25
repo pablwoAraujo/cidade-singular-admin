@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:cidade_singular_admin/app/screens/singularities/address_search.dart';
+import 'package:cidade_singular_admin/app/services/singularity_service.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -16,30 +18,14 @@ class AddSingularityPage extends StatefulWidget {
   _AddSingularityPageState createState() => _AddSingularityPageState();
 }
 
-class VisitingHours {
-  String day;
-  bool open = false;
-  String hourInit = "";
-  String hourEnd = "";
-  bool valid = true;
-
-  VisitingHours({
-    required this.day,
-  });
-
-  void validate() {
-    if (open) {
-      valid = hourInit.isNotEmpty && hourEnd.isNotEmpty;
-    }
-  }
-}
-
 class _AddSingularityPageState extends State<AddSingularityPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController titleTextEdtCtrl = TextEditingController();
   TextEditingController descriptionTextEdtCtrl = TextEditingController();
   TextEditingController addressTextEdtCtrl = TextEditingController();
   TextEditingController visitingHoursTextEdtCtrl = TextEditingController();
+
+  SingularityService singularityService = Modular.get();
 
   final ImagePicker picker = ImagePicker();
 
@@ -54,7 +40,16 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
     }
   }
 
+  bool validateImages() {
+    setState(() {
+      validImages = images.isNotEmpty;
+    });
+    return validImages;
+  }
+
   bool validImages = true;
+
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -217,39 +212,82 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                   ),
                 SizedBox(height: 20),
                 Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      if (images.isEmpty) {
-                        setState(() {
-                          validImages = false;
-                        });
-                      }
-                      if (_formKey.currentState?.validate() ?? false) {}
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Constants.primaryColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white38,
-                            blurRadius: 2,
-                            offset: Offset(2, 2),
-                          )
-                        ],
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      child: Text(
-                        "Adicionar",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                  child: loading
+                      ? Center(child: CircularProgressIndicator())
+                      : GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              loading = true;
+                            });
+                            if ((_formKey.currentState?.validate() ?? false) &&
+                                validateImages()) {
+                              bool added =
+                                  await singularityService.addSingularity(
+                                title: titleTextEdtCtrl.text,
+                                description: descriptionTextEdtCtrl.text,
+                                address: addressTextEdtCtrl.text,
+                                type: "ARTS",
+                                visitingHours: visitingHoursTextEdtCtrl.text,
+                                photos: images,
+                              );
+
+                              if (added) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    duration: Duration(milliseconds: 500),
+                                    backgroundColor: Colors.green.shade800,
+                                    content: Text(
+                                      "Singularidade cadastrada com sucesso!",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                                await Future.delayed(
+                                    Duration(milliseconds: 500));
+                                Modular.to.pop();
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    duration: Duration(milliseconds: 1000),
+                                    backgroundColor: Colors.red.shade800,
+                                    content: Text(
+                                      "Ops, algo deu errado!",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                                await Future.delayed(
+                                    Duration(milliseconds: 500));
+                              }
+                            }
+                            setState(() {
+                              loading = false;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Constants.primaryColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white38,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                )
+                              ],
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            child: Text(
+                              "Adicionar",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
                 SizedBox(height: 30),
               ],
