@@ -19,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController repeatPasswordController = TextEditingController();
 
-  AuthService authService = AuthService();
+  AuthService authService = Modular.get();
 
   final _formKey = GlobalKey<FormState>();
   bool loading = false;

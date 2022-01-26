@@ -19,4 +19,8 @@ class DioService {
 
     return options;
   }
+
+  removeToken() {
+    dio.interceptors.clear();
+  }
 }
