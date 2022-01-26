@@ -51,8 +51,6 @@ class SingularityService {
   }
 
   Future<List<Singularity>> getSingularities() async {
-    dioService.addToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjY5Nzc5NmFmYmE3NmMwMDNjNmZkYyIsInR5cGUiOiJBRE1JTiIsImNpdHkiOiI2MWIyNjZmMzAyNGQ2ZDAwNDk3MjEzMDUiLCJpYXQiOjE2NDMxMzMzMzB9.y7m-fSAdwif_NbXS_6I-6rOZGWE5w7B3sg2Y_YPiKfo");
     try {
       var response = await dioService.dio.get(
         "/singularity",
