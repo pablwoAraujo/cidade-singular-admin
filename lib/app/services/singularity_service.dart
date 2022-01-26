@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cidade_singular_admin/app/models/singularity.dart';
 import 'package:cidade_singular_admin/app/services/dio_service.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
@@ -46,6 +47,32 @@ class SingularityService {
         print(e);
       }
       return false;
+    }
+  }
+
+  Future<List<Singularity>> getSingularities() async {
+    dioService.addToken(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjY5Nzc5NmFmYmE3NmMwMDNjNmZkYyIsInR5cGUiOiJBRE1JTiIsImNpdHkiOiI2MWIyNjZmMzAyNGQ2ZDAwNDk3MjEzMDUiLCJpYXQiOjE2NDMxMzMzMzB9.y7m-fSAdwif_NbXS_6I-6rOZGWE5w7B3sg2Y_YPiKfo");
+    try {
+      var response = await dioService.dio.get(
+        "/singularity",
+        queryParameters: {"type": "ARTS"},
+      );
+
+      if (response.data["error"]) {
+        return [];
+      } else {
+        List<Singularity> sings = [];
+        for (Map data in response.data["data"]) {
+          sings.add(Singularity.fromMap(data));
+        }
+        return sings;
+      }
+    } catch (e) {
+      if (e is DioError) {
+        print(e);
+      }
+      return [];
     }
   }
 }

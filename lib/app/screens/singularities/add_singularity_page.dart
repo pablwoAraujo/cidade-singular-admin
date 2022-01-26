@@ -56,6 +56,9 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Adicionar singularidade"),
+        leading: BackButton(
+          onPressed: () => Modular.to.pop(false),
+        ),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -244,7 +247,7 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                                 );
                                 await Future.delayed(
                                     Duration(milliseconds: 500));
-                                Modular.to.pop();
+                                Modular.to.pop(true);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
