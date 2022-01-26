@@ -1,3 +1,4 @@
+import 'package:cidade_singular_admin/app/screens/profile/profile_page.dart';
 import 'package:cidade_singular_admin/app/screens/singularities/singularities_page.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
@@ -32,14 +33,14 @@ class _HomePageState extends State<HomePage> {
 
   List<MenuPage> pages = [
     MenuPage(
+      name: "Perfil",
+      icon: Icons.person,
+      page: ProfilePage(),
+    ),
+    MenuPage(
       name: "Lugares",
       svgIconPath: "assets/images/places.svg",
       page: SingularitiesPage(),
-    ),
-    MenuPage(
-      name: "Page 2",
-      icon: Icons.ac_unit,
-      page: Scaffold(backgroundColor: Colors.greenAccent),
     ),
     MenuPage(
       name: "Page 3",
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           svgIconPath == null
               ? Icon(
-                  Icons.home,
+                  icon,
                   size: selected ? 28 : 24,
                   color: selected
                       ? Constants.primaryColor
