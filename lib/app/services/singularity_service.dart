@@ -50,11 +50,12 @@ class SingularityService {
     }
   }
 
-  Future<List<Singularity>> getSingularities() async {
+  Future<List<Singularity>> getSingularities(
+      {required String creatorId}) async {
     try {
       var response = await dioService.dio.get(
         "/singularity",
-        queryParameters: {"type": "ARTS"},
+        queryParameters: {"creator": creatorId},
       );
 
       if (response.data["error"]) {

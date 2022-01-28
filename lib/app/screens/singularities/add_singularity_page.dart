@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cidade_singular_admin/app/screens/singularities/address_search.dart';
 import 'package:cidade_singular_admin/app/services/singularity_service.dart';
+import 'package:cidade_singular_admin/app/stores/user_store.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -24,6 +25,8 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
   TextEditingController descriptionTextEdtCtrl = TextEditingController();
   TextEditingController addressTextEdtCtrl = TextEditingController();
   TextEditingController visitingHoursTextEdtCtrl = TextEditingController();
+
+  UserStore userStore = Modular.get();
 
   SingularityService singularityService = Modular.get();
 
@@ -229,7 +232,11 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                                 title: titleTextEdtCtrl.text,
                                 description: descriptionTextEdtCtrl.text,
                                 address: addressTextEdtCtrl.text,
-                                type: "ARTS",
+                                type: userStore.user?.curator_type
+                                        .toString()
+                                        .split('.')
+                                        .last ??
+                                    "",
                                 visitingHours: visitingHoursTextEdtCtrl.text,
                                 photos: images,
                               );

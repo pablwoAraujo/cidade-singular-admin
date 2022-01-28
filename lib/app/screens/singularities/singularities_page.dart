@@ -2,6 +2,7 @@ import 'package:cidade_singular_admin/app/models/singularity.dart';
 import 'package:cidade_singular_admin/app/screens/singularities/add_singularity_page.dart';
 import 'package:cidade_singular_admin/app/screens/singularities/singularity_widget.dart';
 import 'package:cidade_singular_admin/app/services/singularity_service.dart';
+import 'package:cidade_singular_admin/app/stores/user_store.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -16,6 +17,8 @@ class SingularitiesPage extends StatefulWidget {
 class _SingularitiesPageState extends State<SingularitiesPage> {
   SingularityService service = Modular.get();
 
+  UserStore userStore = Modular.get();
+
   bool loading = false;
   List<Singularity> singularities = [];
 
@@ -27,7 +30,8 @@ class _SingularitiesPageState extends State<SingularitiesPage> {
 
   getSingularites() async {
     setState(() => loading = true);
-    singularities = await service.getSingularities();
+    singularities =
+        await service.getSingularities(creatorId: userStore.user?.id ?? "");
     setState(() => loading = false);
   }
 
