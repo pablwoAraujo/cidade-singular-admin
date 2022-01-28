@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cidade_singular_admin/app/models/city.dart';
 import 'package:cidade_singular_admin/app/models/user.dart';
 import 'package:cidade_singular_admin/app/services/dio_service.dart';
 import 'package:dio/dio.dart';
@@ -29,6 +30,8 @@ class UserService {
       }
     } catch (e) {
       if (e is DioError) {
+        print(e);
+      } else {
         print(e);
       }
       return null;
@@ -66,6 +69,9 @@ class UserService {
     String? name,
     String? description,
     XFile? photo,
+    String? type,
+    String? curator_type,
+    String? city,
     required String id,
   }) async {
     try {
@@ -75,6 +81,9 @@ class UserService {
           if (name != null) "name": name,
           if (description != null) "description": description,
           if (photo != null) "picture": base64Encode(await photo.readAsBytes()),
+          if (type != null) "type": type,
+          if (curator_type != null) "curator_type": curator_type,
+          if (city != null) "city": city,
         },
       );
 
@@ -90,6 +99,32 @@ class UserService {
         print(e);
       }
       return null;
+    }
+  }
+
+  Future<List<User>> getUsers({Map<String, String> query = const {}}) async {
+    try {
+      var response = await dioService.dio.get(
+        "/user",
+        queryParameters: query,
+      );
+
+      if (response.data["error"]) {
+        return [];
+      } else {
+        List<User> users = [];
+        for (Map data in response.data["data"]) {
+          users.add(User.fromMap(data));
+        }
+        return users;
+      }
+    } catch (e) {
+      if (e is DioError) {
+        print(e);
+      } else {
+        print(e);
+      }
+      return [];
     }
   }
 }

@@ -28,7 +28,9 @@ class User {
         name = map["name"],
         description = map["description"],
         type = UserType._from[map["type"]],
-        curator_type = CuratorType._from[map["curator_type"]],
+        curator_type = map["curator_type"] != null
+            ? CuratorType._from[map["curator_type"]]
+            : null,
         picture = map["picture"],
         city = map["city"] == null && (map['city'] is! String)
             ? null

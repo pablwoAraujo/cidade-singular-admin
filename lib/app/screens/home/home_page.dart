@@ -1,3 +1,4 @@
+import 'package:cidade_singular_admin/app/screens/curators/curators_page.dart';
 import 'package:cidade_singular_admin/app/screens/profile/profile_page.dart';
 import 'package:cidade_singular_admin/app/screens/singularities/singularities_page.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
@@ -33,20 +34,20 @@ class _HomePageState extends State<HomePage> {
 
   List<MenuPage> pages = [
     MenuPage(
-      name: "Perfil",
-      icon: Icons.person,
-      page: ProfilePage(),
-    ),
-    MenuPage(
-      name: "Lugares",
+      name: "Singular",
       svgIconPath: "assets/images/places.svg",
       page: SingularitiesPage(),
     ),
     MenuPage(
-      name: "Page 3",
-      icon: Icons.list,
-      page: Scaffold(backgroundColor: Colors.yellowAccent),
-    )
+      name: "Curadores",
+      icon: Icons.people_rounded,
+      page: CuratorsPage(),
+    ),
+    MenuPage(
+      name: "Perfil",
+      icon: Icons.person,
+      page: ProfilePage(),
+    ),
   ];
 
   @override
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage> {
             right: 0,
             left: 0,
             child: Container(
-              height: 75,
+              height: 70,
               margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -105,35 +106,40 @@ class _HomePageState extends State<HomePage> {
     String? svgIconPath,
     bool selected = false,
   }) {
-    return InkWell(
+    return GestureDetector(
       onTap: onPressed,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          svgIconPath == null
-              ? Icon(
-                  icon,
-                  size: selected ? 28 : 24,
-                  color: selected
-                      ? Constants.primaryColor
-                      : Constants.disableColor,
-                )
-              : SvgPicture.asset(
-                  svgIconPath,
-                  color: selected
-                      ? Constants.primaryColor
-                      : Constants.disableColor,
-                  width: selected ? 28 : 24,
-                  height: selected ? 28 : 24,
-                ),
-          Text(
-            title,
-            style: TextStyle(
-              color: selected ? Constants.primaryColor : Constants.disableColor,
-              fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+      child: SizedBox(
+        width: 70,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            svgIconPath == null
+                ? Icon(
+                    icon,
+                    size: selected ? 26 : 22,
+                    color: selected
+                        ? Constants.primaryColor
+                        : Constants.disableColor,
+                  )
+                : SvgPicture.asset(
+                    svgIconPath,
+                    color: selected
+                        ? Constants.primaryColor
+                        : Constants.disableColor,
+                    width: selected ? 26 : 22,
+                    height: selected ? 26 : 22,
+                  ),
+            Text(
+              title,
+              style: TextStyle(
+                color:
+                    selected ? Constants.primaryColor : Constants.disableColor,
+                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                fontSize: 12,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
