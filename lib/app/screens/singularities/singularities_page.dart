@@ -1,4 +1,5 @@
 import 'package:cidade_singular_admin/app/models/singularity.dart';
+import 'package:cidade_singular_admin/app/models/user.dart';
 import 'package:cidade_singular_admin/app/screens/singularities/add_singularity_page.dart';
 import 'package:cidade_singular_admin/app/screens/singularities/singularity_widget.dart';
 import 'package:cidade_singular_admin/app/services/singularity_service.dart';
@@ -30,13 +31,25 @@ class _SingularitiesPageState extends State<SingularitiesPage> {
 
   getSingularites() async {
     setState(() => loading = true);
-    singularities =
-        await service.getSingularities(creatorId: userStore.user?.id ?? "");
+    User? user = userStore.user;
+    UserType userType = userStore.user?.type ?? UserType.VISITOR;
+    if (userType == UserType.CURATOR) {
+      singularities =
+          await service.getSingularities(query: {"creator": user?.id ?? ""});
+    } else {
+      singularities = await service.getSingularities(query: {
+        "city": user?.city?.id ?? "",
+        "type": user?.curator_type.toString().split(".").last ?? "",
+      });
+    }
+
     setState(() => loading = false);
   }
 
   @override
   Widget build(BuildContext context) {
+    UserType userType = userStore.user?.type ?? UserType.VISITOR;
+    bool canAddSingularity = userType == UserType.CURATOR;
     return Scaffold(
       appBar: AppBar(
         title: Text("Singularidades"),
@@ -56,26 +69,27 @@ class _SingularitiesPageState extends State<SingularitiesPage> {
                           left: 16, right: 16, bottom: index == 9 ? 140 : 10),
                     );
                   }),
-          Positioned(
-            bottom: 100,
-            right: 16,
-            child: FloatingActionButton(
-              backgroundColor: Constants.primaryColor,
-              onPressed: () async {
-                try {
-                  bool sholdReload = (await Modular.to
-                      .pushNamed(AddSingularityPage.routeName)) as bool;
-                  if (sholdReload) getSingularites();
-                } catch (e) {}
-              },
-              child: Text(
-                "+",
-                style: TextStyle(
-                  fontSize: 30,
+          if (canAddSingularity)
+            Positioned(
+              bottom: 100,
+              right: 16,
+              child: FloatingActionButton(
+                backgroundColor: Constants.primaryColor,
+                onPressed: () async {
+                  try {
+                    bool sholdReload = (await Modular.to
+                        .pushNamed(AddSingularityPage.routeName)) as bool;
+                    if (sholdReload) getSingularites();
+                  } catch (e) {}
+                },
+                child: Text(
+                  "+",
+                  style: TextStyle(
+                    fontSize: 30,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

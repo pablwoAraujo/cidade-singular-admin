@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:cidade_singular_admin/app/models/city.dart';
 import 'package:cidade_singular_admin/app/models/user.dart';
 import 'package:cidade_singular_admin/app/services/dio_service.dart';
 import 'package:dio/dio.dart';

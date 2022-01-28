@@ -1,8 +1,11 @@
+import 'package:cidade_singular_admin/app/models/user.dart';
 import 'package:cidade_singular_admin/app/screens/curators/curators_page.dart';
 import 'package:cidade_singular_admin/app/screens/profile/profile_page.dart';
 import 'package:cidade_singular_admin/app/screens/singularities/singularities_page.dart';
+import 'package:cidade_singular_admin/app/stores/user_store.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +22,8 @@ class _HomePageState extends State<HomePage> {
   PageController pageController = PageController();
   int currentPage = 0;
 
+  UserStore userStore = Modular.get();
+
   @override
   void initState() {
     pageController.addListener(() {
@@ -32,26 +37,29 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  List<MenuPage> pages = [
-    MenuPage(
-      name: "Singular",
-      svgIconPath: "assets/images/places.svg",
-      page: SingularitiesPage(),
-    ),
-    MenuPage(
-      name: "Curadores",
-      icon: Icons.people_rounded,
-      page: CuratorsPage(),
-    ),
-    MenuPage(
-      name: "Perfil",
-      icon: Icons.person,
-      page: ProfilePage(),
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    UserType userType = userStore.user?.type ?? UserType.VISITOR;
+    List<MenuPage> pages = [
+      if (userType != UserType.VISITOR)
+        MenuPage(
+          name: "Singular",
+          svgIconPath: "assets/images/places.svg",
+          page: SingularitiesPage(),
+        ),
+      if (userType == UserType.MANAGER || userType == UserType.ADMIN)
+        MenuPage(
+          name: "Curadores",
+          icon: Icons.people_rounded,
+          page: CuratorsPage(),
+        ),
+      MenuPage(
+        name: "Perfil",
+        icon: Icons.person,
+        page: ProfilePage(),
+      ),
+    ];
+
     List<Widget> menuItens = [];
     for (int i = 0; i < pages.length; i++) {
       MenuPage page = pages[i];
