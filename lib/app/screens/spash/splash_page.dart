@@ -1,6 +1,6 @@
 import 'package:cidade_singular_admin/app/screens/home/home_page.dart';
 import 'package:cidade_singular_admin/app/screens/login/login_page.dart';
-import 'package:cidade_singular_admin/app/services/auth_service.dart';
+import 'package:cidade_singular_admin/app/services/user_service.dart';
 import 'package:cidade_singular_admin/app/stores/user_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -13,12 +13,12 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  AuthService authService = Modular.get();
+  UserService userService = Modular.get();
   UserStore userStore = Modular.get();
 
   @override
   void initState() {
-    authService.me().then((user) {
+    userService.me().then((user) {
       if (user != null) {
         userStore.setUser(user);
         Modular.to.popAndPushNamed(HomePage.routeName);

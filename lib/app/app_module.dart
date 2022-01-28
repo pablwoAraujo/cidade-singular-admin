@@ -6,6 +6,7 @@ import 'package:cidade_singular_admin/app/screens/spash/splash_page.dart';
 import 'package:cidade_singular_admin/app/services/auth_service.dart';
 import 'package:cidade_singular_admin/app/services/dio_service.dart';
 import 'package:cidade_singular_admin/app/services/singularity_service.dart';
+import 'package:cidade_singular_admin/app/services/user_service.dart';
 import 'package:cidade_singular_admin/app/stores/user_store.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -15,6 +16,7 @@ class AppModule extends Module {
     Bind((i) => DioService()),
     Bind((i) => SingularityService(i.get())),
     Bind((i) => AuthService(i.get())),
+    Bind((i) => UserService(i.get())),
     Bind((i) => UserStore())
   ];
 

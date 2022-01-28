@@ -2,6 +2,7 @@ import 'package:cidade_singular_admin/app/models/user.dart';
 import 'package:cidade_singular_admin/app/screens/home/home_page.dart';
 import 'package:cidade_singular_admin/app/screens/register/register_page.dart';
 import 'package:cidade_singular_admin/app/services/auth_service.dart';
+import 'package:cidade_singular_admin/app/services/user_service.dart';
 import 'package:cidade_singular_admin/app/stores/user_store.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   AuthService authService = Modular.get();
+
+  UserService userService = Modular.get();
 
   UserStore userStore = Modular.get();
 
@@ -117,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                                 email: emailController.text,
                                 password: passwordController.text);
                             if (logged) {
-                              User? user = await authService.me();
+                              User? user = await userService.me();
                               userStore.setUser(user);
                               Modular.to.popAndPushNamed(HomePage.routeName);
                             } else {

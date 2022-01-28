@@ -1,5 +1,5 @@
 import 'package:cidade_singular_admin/app/screens/login/login_page.dart';
-import 'package:cidade_singular_admin/app/services/auth_service.dart';
+import 'package:cidade_singular_admin/app/services/user_service.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -19,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController repeatPasswordController = TextEditingController();
 
-  AuthService authService = Modular.get();
+  UserService userService = Modular.get();
 
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
@@ -107,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           });
 
                           if (_formKey.currentState!.validate()) {
-                            bool registered = await authService.register(
+                            bool registered = await userService.register(
                               email: emailController.text,
                               password: passwordController.text,
                               name: usernameController.text,

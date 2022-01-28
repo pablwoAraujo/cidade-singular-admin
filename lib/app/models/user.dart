@@ -30,7 +30,9 @@ class User {
         type = UserType._from[map["type"]],
         curator_type = CuratorType._from[map["curator_type"]],
         picture = map["picture"],
-        city = map["city"] == null ? null : City.fromMap(map["city"]);
+        city = map["city"] == null && (map['city'] is! String)
+            ? null
+            : City.fromMap(map["city"]);
 }
 
 enum UserType {
