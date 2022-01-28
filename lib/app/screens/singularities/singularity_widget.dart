@@ -1,17 +1,24 @@
 import 'package:cidade_singular_admin/app/models/singularity.dart';
+import 'package:cidade_singular_admin/app/services/singularity_service.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SingularityWidget extends StatelessWidget {
-  const SingularityWidget({
+  SingularityWidget({
     Key? key,
     required this.sing,
     this.margin = const EdgeInsets.all(16),
+    this.onDelete,
   }) : super(key: key);
 
   final Singularity sing;
   final EdgeInsets margin;
+
+  VoidCallback? onDelete;
+
+  SingularityService singularityService = Modular.get();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +99,54 @@ class SingularityWidget extends StatelessWidget {
                       ),
                       Expanded(child: Container()),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(
+                                  "Deseja realmente remover esta singularidade?"),
+                              content: ListTile(
+                                leading: SizedBox(
+                                  width: 80,
+                                  height: 80,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: Image.network(
+                                      sing.photos.isNotEmpty
+                                          ? sing.photos.first
+                                          : "https://via.placeholder.com/150",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                title: Text(sing.title),
+                                subtitle: Text(sing.address),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () async {
+                                    bool removed = await singularityService
+                                        .removeSingularity(
+                                      singularity: sing.id,
+                                    );
+                                    if (removed) onDelete!.call();
+                                    Modular.to.pop(removed);
+                                  },
+                                  child: Text(
+                                    "Remover",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Modular.to.pop(false);
+                                  },
+                                  child: Text("Cancelar"),
+                                )
+                              ],
+                            ),
+                          );
+                        },
                         child: Container(
                           height: 25,
                           width: 80,

@@ -74,4 +74,21 @@ class SingularityService {
       return [];
     }
   }
+
+  Future<bool> removeSingularity({required String singularity}) async {
+    try {
+      var response = await dioService.dio.delete("/singularity/$singularity");
+
+      if (response.data["error"]) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      if (e is DioError) {
+        print(e);
+      }
+      return false;
+    }
+  }
 }

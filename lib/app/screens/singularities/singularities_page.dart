@@ -65,6 +65,7 @@ class _SingularitiesPageState extends State<SingularitiesPage> {
                     Singularity sing = singularities[index];
                     return SingularityWidget(
                       sing: sing,
+                      onDelete: getSingularites,
                       margin: EdgeInsets.only(
                           left: 16, right: 16, bottom: index == 9 ? 140 : 10),
                     );
