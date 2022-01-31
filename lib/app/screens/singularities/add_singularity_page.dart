@@ -50,6 +50,9 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
     return validImages;
   }
 
+  double? lat;
+  double? lng;
+
   bool validImages = true;
 
   bool loading = false;
@@ -101,6 +104,8 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                     if (result != null) {
                       setState(() {
                         addressTextEdtCtrl.text = result.description;
+                        lat = result.lat;
+                        lng = result.lng;
                       });
                     }
                   },
@@ -239,6 +244,8 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                                     "",
                                 visitingHours: visitingHoursTextEdtCtrl.text,
                                 photos: images,
+                                lat: lat ?? 0,
+                                lng: lng ?? 0,
                               );
 
                               if (added) {

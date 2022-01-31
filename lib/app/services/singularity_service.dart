@@ -17,6 +17,8 @@ class SingularityService {
     required String type,
     required String visitingHours,
     required List<XFile> photos,
+    required double lat,
+    required double lng,
   }) async {
     try {
       List<String> photosInBase64 = [];
@@ -34,6 +36,8 @@ class SingularityService {
           "address": address,
           "type": type,
           "photos": photosInBase64,
+          "lat": lat,
+          "lng": lng,
         },
       );
 
