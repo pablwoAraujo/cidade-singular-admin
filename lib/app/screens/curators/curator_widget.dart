@@ -1,6 +1,7 @@
 import 'package:cidade_singular_admin/app/models/user.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CuratorWidget extends StatelessWidget {
   const CuratorWidget({
@@ -83,6 +84,22 @@ class CuratorWidget extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 5),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Constants.getColor(
+                            user.curator_type.toString().split(".").last),
+                        borderRadius: BorderRadius.circular(50)),
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(user.curator_type?.value ?? ""),
+                        SvgPicture.asset(
+                            "assets/images/${user.curator_type.toString().split(".").last}.svg",
+                            width: 20)
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

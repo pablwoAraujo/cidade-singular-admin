@@ -37,10 +37,8 @@ class _SingularitiesPageState extends State<SingularitiesPage> {
       singularities =
           await service.getSingularities(query: {"creator": user?.id ?? ""});
     } else {
-      singularities = await service.getSingularities(query: {
-        "city": user?.city?.id ?? "",
-        "type": user?.curator_type.toString().split(".").last ?? "",
-      });
+      singularities =
+          await service.getSingularities(query: {"city": user?.city?.id ?? ""});
     }
 
     setState(() => loading = false);

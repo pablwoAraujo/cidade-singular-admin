@@ -230,8 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         title: "Usuário",
                         controller: userTypeController
                           ..text = user.type.value +
-                              (((user.type == UserType.CURATOR ||
-                                          user.type == UserType.MANAGER) &&
+                              ((user.type == UserType.CURATOR &&
                                       user.curator_type != null)
                                   ? " de " + (user.curator_type?.value ?? "")
                                   : "")),

@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AddCuratorDialog extends StatefulWidget {
-  const AddCuratorDialog({Key? key}) : super(key: key);
+  const AddCuratorDialog({Key? key, required this.curatorType})
+      : super(key: key);
+
+  final String curatorType;
 
   @override
   _AddCuratorPageState createState() => _AddCuratorPageState();
@@ -37,7 +40,7 @@ class _AddCuratorPageState extends State<AddCuratorDialog> {
       id: curator.id,
       city: userStore.user?.city?.id,
       type: UserType.CURATOR.toString().split(".").last,
-      curator_type: userStore.user?.curator_type.toString().split(".").last,
+      curator_type: widget.curatorType,
     );
     if (newCurator != null) {
       Modular.to.pop(true);
@@ -47,7 +50,7 @@ class _AddCuratorPageState extends State<AddCuratorDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Adicionar curador"),
+      title: Text("Adicionar curador de ${CuratorValue(widget.curatorType)}"),
       actions: [
         TextButton(
           onPressed: () => Modular.to.pop(true),
@@ -83,5 +86,26 @@ class _AddCuratorPageState extends State<AddCuratorDialog> {
                       .toList()),
             ),
     );
+  }
+
+  String CuratorValue(String type) {
+    switch (type) {
+      case "ARTS":
+        return "Artes Midiáticas";
+      case "CRAFTS":
+        return "Artesanato";
+      case "DESIGN":
+        return "Design";
+      case "FILM":
+        return "Cinema";
+      case "GASTRONOMY":
+        return "Gastronomia";
+      case "LITERATURE":
+        return "Literatura";
+      case "MUSIC":
+        return "Música";
+      default:
+        return "Não definido";
+    }
   }
 }

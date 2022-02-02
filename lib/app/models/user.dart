@@ -92,7 +92,7 @@ extension CuratorTypeExtension on CuratorType {
   String get value {
     switch (this) {
       case CuratorType.ARTS:
-        return "Arte Digital";
+        return "Artes Midiáticas";
       case CuratorType.CRAFTS:
         return "Artesanato";
       case CuratorType.DESIGN:

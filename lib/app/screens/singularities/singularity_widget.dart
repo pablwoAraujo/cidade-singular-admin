@@ -1,4 +1,5 @@
 import 'package:cidade_singular_admin/app/models/singularity.dart';
+import 'package:cidade_singular_admin/app/models/user.dart';
 import 'package:cidade_singular_admin/app/services/singularity_service.dart';
 import 'package:cidade_singular_admin/app/util/colors.dart';
 import 'package:flutter/material.dart';
@@ -35,14 +36,45 @@ class SingularityWidget extends StatelessWidget {
             width: 100,
             height: 100,
             padding: const EdgeInsets.all(5),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.network(
-                sing.photos.isNotEmpty
-                    ? sing.photos.first
-                    : "https://via.placeholder.com/150",
-                fit: BoxFit.cover,
-              ),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      sing.photos.isNotEmpty
+                          ? sing.photos.first
+                          : "https://via.placeholder.com/150",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 5,
+                  left: 5,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Constants.getColor(sing.type),
+                        borderRadius: BorderRadius.circular(50)),
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 55,
+                          child: Text(
+                            CuratorValue(sing.type),
+                            style: TextStyle(fontSize: 10),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SvgPicture.asset("assets/images/${sing.type}.svg",
+                            width: 15)
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -187,5 +219,26 @@ class SingularityWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String CuratorValue(String type) {
+    switch (type) {
+      case "ARTS":
+        return "Artes Midiáticas";
+      case "CRAFTS":
+        return "Artesanato";
+      case "DESIGN":
+        return "Design";
+      case "FILM":
+        return "Cinema";
+      case "GASTRONOMY":
+        return "Gastronomia";
+      case "LITERATURE":
+        return "Literatura";
+      case "MUSIC":
+        return "Música";
+      default:
+        return "Não definido";
+    }
   }
 }
