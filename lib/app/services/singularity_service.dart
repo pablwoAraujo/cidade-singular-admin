@@ -74,6 +74,8 @@ class SingularityService {
     } catch (e) {
       if (e is DioError) {
         print(e);
+      } else {
+        print(e);
       }
       return [];
     }

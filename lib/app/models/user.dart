@@ -32,7 +32,7 @@ class User {
             ? CuratorType._from[map["curator_type"]]
             : null,
         picture = map["picture"],
-        city = map["city"] == null && (map['city'] is! String)
+        city = map["city"] == null || (map['city'] is String)
             ? null
             : City.fromMap(map["city"]);
 }

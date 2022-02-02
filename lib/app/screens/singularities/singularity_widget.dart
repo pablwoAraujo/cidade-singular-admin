@@ -94,6 +94,15 @@ class SingularityWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  Text(
+                    "${sing.creator.name} (${sing.creator.email})",
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
                   Row(
                     children: [
                       SvgPicture.asset(
