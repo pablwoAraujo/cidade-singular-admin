@@ -57,7 +57,10 @@ class _CuratorsPageState extends State<CuratorsPage> {
                     return CuratorWidget(
                       user: user,
                       margin: EdgeInsets.only(
-                          left: 16, right: 16, bottom: index == 9 ? 140 : 10),
+                        left: 16,
+                        right: 16,
+                        bottom: index == curators.length - 1 ? 140 : 10,
+                      ),
                     );
                   }),
           Positioned(

@@ -65,7 +65,10 @@ class _SingularitiesPageState extends State<SingularitiesPage> {
                       sing: sing,
                       onDelete: getSingularites,
                       margin: EdgeInsets.only(
-                          left: 16, right: 16, bottom: index == 9 ? 140 : 10),
+                        left: 16,
+                        right: 16,
+                        bottom: index == singularities.length - 1 ? 140 : 10,
+                      ),
                     );
                   }),
           if (canAddSingularity)
