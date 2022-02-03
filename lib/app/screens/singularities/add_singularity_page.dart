@@ -251,25 +251,35 @@ class _AddSingularityPageState extends State<AddSingularityPage> {
                               if (added) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    duration: Duration(milliseconds: 500),
+                                    duration: Duration(seconds: 5),
                                     backgroundColor: Colors.green.shade800,
                                     content: Text(
                                       "Singularidade cadastrada com sucesso!",
                                       textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 );
                                 await Future.delayed(
-                                    Duration(milliseconds: 500));
+                                    Duration(milliseconds: 1000));
                                 Modular.to.pop(true);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    duration: Duration(milliseconds: 1000),
+                                    duration: Duration(seconds: 5),
                                     backgroundColor: Colors.red.shade800,
                                     content: Text(
                                       "Ops, algo deu errado!",
                                       textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 );

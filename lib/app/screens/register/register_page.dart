@@ -117,16 +117,21 @@ class _RegisterPageState extends State<RegisterPage> {
                               if (registered) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    duration: Duration(milliseconds: 500),
+                                    duration: Duration(seconds: 5),
                                     backgroundColor: Colors.green.shade800,
                                     content: Text(
                                       "Usuário cadastrado com sucesso!",
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
                                 );
                                 await Future.delayed(
-                                    Duration(milliseconds: 500));
+                                    Duration(milliseconds: 1000));
                                 Modular.to.popAndPushNamed(
                                   LoginPage.routeName,
                                   arguments: emailController.text,
@@ -134,10 +139,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    duration: Duration(milliseconds: 1000),
+                                    duration: Duration(seconds: 5),
                                     backgroundColor: Colors.red.shade800,
                                     content: Text(
                                       "Usuário já cadastrado!",
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
