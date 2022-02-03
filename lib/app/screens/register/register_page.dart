@@ -26,173 +26,179 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 5,
-                offset: Offset(2, 2),
-              )
-            ],
-          ),
-          padding: EdgeInsets.all(20),
-          margin: EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Cadastro",
-                  style: TextStyle(
-                    fontSize: 26,
-                    color: Constants.primaryColor,
-                    fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                  offset: Offset(2, 2),
+                )
+              ],
+            ),
+            padding: EdgeInsets.all(20),
+            margin: EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Cadastro",
+                    style: TextStyle(
+                      fontSize: 26,
+                      color: Constants.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                buildFormField(
-                  controller: usernameController,
-                  field: "Nome",
-                  hintText: "username",
-                  prefix: Icons.person,
-                ),
-                SizedBox(height: 10),
-                buildFormField(
-                  controller: emailController,
-                  field: "Email",
-                  hintText: "email@exemplo.com",
-                  prefix: Icons.person,
-                  validator: (email) {
-                    if (!RegExp(r".+\@.+\..+").hasMatch(email ?? "")) {
-                      return "Email inválido";
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 10),
-                buildFormField(
-                  controller: passwordController,
-                  field: "Senha",
-                  hintText: "****",
-                  prefix: Icons.lock,
-                  obscureText: true,
-                ),
-                SizedBox(height: 10),
-                buildFormField(
-                  controller: repeatPasswordController,
-                  field: "Repita a senha",
-                  hintText: "****",
-                  prefix: Icons.lock,
-                  obscureText: true,
-                  validator: (value) {
-                    if (value != passwordController.text) {
-                      return "Senhas não coincidem";
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 30),
-                loading
-                    ? Center(child: CircularProgressIndicator())
-                    : InkWell(
-                        onTap: () async {
-                          setState(() {
-                            loading = true;
-                          });
+                  SizedBox(height: 20),
+                  buildFormField(
+                    controller: usernameController,
+                    field: "Nome",
+                    hintText: "username",
+                    prefix: Icons.person,
+                  ),
+                  SizedBox(height: 10),
+                  buildFormField(
+                    controller: emailController,
+                    field: "Email",
+                    hintText: "email@exemplo.com",
+                    prefix: Icons.person,
+                    validator: (email) {
+                      if (!RegExp(r".+\@.+\..+").hasMatch(email ?? "")) {
+                        return "Email inválido";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  buildFormField(
+                    controller: passwordController,
+                    field: "Senha",
+                    hintText: "****",
+                    prefix: Icons.lock,
+                    obscureText: true,
+                  ),
+                  SizedBox(height: 10),
+                  buildFormField(
+                    controller: repeatPasswordController,
+                    field: "Repita a senha",
+                    hintText: "****",
+                    prefix: Icons.lock,
+                    obscureText: true,
+                    validator: (value) {
+                      if (value != passwordController.text) {
+                        return "Senhas não coincidem";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 30),
+                  loading
+                      ? Center(child: CircularProgressIndicator())
+                      : InkWell(
+                          onTap: () async {
+                            setState(() {
+                              loading = true;
+                            });
 
-                          if (_formKey.currentState!.validate()) {
-                            bool registered = await userService.register(
-                              email: emailController.text,
-                              password: passwordController.text,
-                              name: usernameController.text,
-                            );
-                            if (registered) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  duration: Duration(milliseconds: 500),
-                                  backgroundColor: Colors.green.shade800,
-                                  content: Text(
-                                    "Usuário cadastrado com sucesso!",
-                                    textAlign: TextAlign.center,
+                            if (_formKey.currentState!.validate()) {
+                              bool registered = await userService.register(
+                                email: emailController.text,
+                                password: passwordController.text,
+                                name: usernameController.text,
+                              );
+                              if (registered) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    duration: Duration(milliseconds: 500),
+                                    backgroundColor: Colors.green.shade800,
+                                    content: Text(
+                                      "Usuário cadastrado com sucesso!",
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                ),
-                              );
-                              await Future.delayed(Duration(milliseconds: 500));
-                              Modular.to.popAndPushNamed(
-                                LoginPage.routeName,
-                                arguments: emailController.text,
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  duration: Duration(milliseconds: 1000),
-                                  backgroundColor: Colors.red.shade800,
-                                  content: Text(
-                                    "Usuário já cadastrado!",
-                                    textAlign: TextAlign.center,
+                                );
+                                await Future.delayed(
+                                    Duration(milliseconds: 500));
+                                Modular.to.popAndPushNamed(
+                                  LoginPage.routeName,
+                                  arguments: emailController.text,
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    duration: Duration(milliseconds: 1000),
+                                    backgroundColor: Colors.red.shade800,
+                                    content: Text(
+                                      "Usuário já cadastrado!",
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                ),
-                              );
-                              await Future.delayed(Duration(milliseconds: 500));
+                                );
+                                await Future.delayed(
+                                    Duration(milliseconds: 500));
+                              }
                             }
-                          }
-                          setState(() {
-                            loading = false;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Constants.primaryColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white38,
-                                blurRadius: 2,
-                                offset: Offset(2, 2),
-                              )
-                            ],
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Center(
-                            child: Text(
-                              "Cadastrar",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
+                            setState(() {
+                              loading = false;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Constants.primaryColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white38,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                )
+                              ],
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: Center(
+                              child: Text(
+                                "Cadastrar",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                SizedBox(height: 15),
-                InkWell(
-                  onTap: () => Modular.to.popAndPushNamed(LoginPage.routeName),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Já possui uma conta?",
-                        style: TextStyle(
-                          fontSize: 12,
+                  SizedBox(height: 15),
+                  InkWell(
+                    onTap: () =>
+                        Modular.to.popAndPushNamed(LoginPage.routeName),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Já possui uma conta?",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "Login",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Constants.primaryColor,
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Constants.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

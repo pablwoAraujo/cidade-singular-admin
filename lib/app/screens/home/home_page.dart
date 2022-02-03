@@ -71,38 +71,41 @@ class _HomePageState extends State<HomePage> {
         onPressed: () => pageController.jumpToPage(i),
       ));
     }
-    return Scaffold(
-      body: Stack(
-        children: [
-          PageView(
-            controller: pageController,
-            children: pages.map((p) => p.page).toList(),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            left: 0,
-            child: Container(
-              height: 70,
-              margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(4, 4),
-                    blurRadius: 5,
-                    color: Colors.black26,
-                  )
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: menuItens,
-              ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            PageView(
+              controller: pageController,
+              children: pages.map((p) => p.page).toList(),
             ),
-          )
-        ],
+            Positioned(
+              bottom: 0,
+              right: 0,
+              left: 0,
+              child: Container(
+                height: 70,
+                margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(4, 4),
+                      blurRadius: 5,
+                      color: Colors.black26,
+                    )
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: menuItens,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

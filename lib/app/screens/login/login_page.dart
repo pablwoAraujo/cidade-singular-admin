@@ -50,137 +50,140 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 5,
-                offset: Offset(2, 2),
-              )
-            ],
-          ),
-          padding: EdgeInsets.all(20),
-          margin: EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Login",
-                  style: TextStyle(
-                    fontSize: 26,
-                    color: Constants.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 20),
-                buildFormField(
-                  controller: emailController,
-                  field: "Email",
-                  hintText: "email@exemplo.com",
-                  prefix: Icons.person,
-                ),
-                SizedBox(height: 10),
-                buildFormField(
-                  controller: passwordController,
-                  field: "Senha",
-                  hintText: "****",
-                  prefix: Icons.lock,
-                  obscureText: true,
-                  focus: passwordFocusNode,
-                ),
-                if (loginError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Email ou senha incorretos, tente novamente!",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.red.shade900,
-                      ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                  offset: Offset(2, 2),
+                )
+              ],
+            ),
+            padding: EdgeInsets.all(20),
+            margin: EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 26,
+                      color: Constants.primaryColor,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                SizedBox(height: 30),
-                loading
-                    ? Center(child: CircularProgressIndicator())
-                    : InkWell(
-                        onTap: () async {
-                          setState(() {
-                            loading = true;
-                            loginError = false;
-                          });
-                          if (_formKey.currentState!.validate()) {
-                            bool logged = await authService.login(
-                                email: emailController.text,
-                                password: passwordController.text);
-                            if (logged) {
-                              User? user = await userService.me();
-                              userStore.setUser(user);
-                              Modular.to.popAndPushNamed(HomePage.routeName);
-                            } else {
-                              setState(() {
-                                loginError = true;
-                              });
+                  SizedBox(height: 20),
+                  buildFormField(
+                    controller: emailController,
+                    field: "Email",
+                    hintText: "email@exemplo.com",
+                    prefix: Icons.person,
+                  ),
+                  SizedBox(height: 10),
+                  buildFormField(
+                    controller: passwordController,
+                    field: "Senha",
+                    hintText: "****",
+                    prefix: Icons.lock,
+                    obscureText: true,
+                    focus: passwordFocusNode,
+                  ),
+                  if (loginError)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Email ou senha incorretos, tente novamente!",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.red.shade900,
+                        ),
+                      ),
+                    ),
+                  SizedBox(height: 30),
+                  loading
+                      ? Center(child: CircularProgressIndicator())
+                      : InkWell(
+                          onTap: () async {
+                            setState(() {
+                              loading = true;
+                              loginError = false;
+                            });
+                            if (_formKey.currentState!.validate()) {
+                              bool logged = await authService.login(
+                                  email: emailController.text,
+                                  password: passwordController.text);
+                              if (logged) {
+                                User? user = await userService.me();
+                                userStore.setUser(user);
+                                Modular.to.popAndPushNamed(HomePage.routeName);
+                              } else {
+                                setState(() {
+                                  loginError = true;
+                                });
+                              }
                             }
-                          }
-                          setState(() {
-                            loading = false;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Constants.primaryColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white38,
-                                blurRadius: 2,
-                                offset: Offset(2, 2),
-                              )
-                            ],
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Center(
-                            child: Text(
-                              "Entrar",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
+                            setState(() {
+                              loading = false;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Constants.primaryColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white38,
+                                  blurRadius: 2,
+                                  offset: Offset(2, 2),
+                                )
+                              ],
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: Center(
+                              child: Text(
+                                "Entrar",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                SizedBox(height: 15),
-                InkWell(
-                  onTap: () =>
-                      Modular.to.popAndPushNamed(RegisterPage.routeName),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Ainda não possui conta?",
-                        style: TextStyle(
-                          fontSize: 12,
+                  SizedBox(height: 15),
+                  InkWell(
+                    onTap: () =>
+                        Modular.to.popAndPushNamed(RegisterPage.routeName),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Ainda não possui conta?",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "Cadastrar",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Constants.primaryColor,
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          "Cadastrar",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Constants.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
