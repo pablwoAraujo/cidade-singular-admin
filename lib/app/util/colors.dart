@@ -30,7 +30,7 @@ class Constants {
       case "FILM":
         return FILM;
       default:
-        return Colors.white;
+        return grey;
     }
   }
 }
