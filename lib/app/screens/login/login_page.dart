@@ -1,5 +1,6 @@
 import 'package:cidade_singular_admin/app/models/user.dart';
 import 'package:cidade_singular_admin/app/screens/home/home_page.dart';
+import 'package:cidade_singular_admin/app/screens/login/recovery_dialog.dart';
 import 'package:cidade_singular_admin/app/screens/register/register_page.dart';
 import 'package:cidade_singular_admin/app/services/auth_service.dart';
 import 'package:cidade_singular_admin/app/services/user_service.dart';
@@ -99,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   if (loginError)
                     Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
                       child: Text(
                         "Email ou senha incorretos, tente novamente!",
                         style: TextStyle(
@@ -107,6 +108,35 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.red.shade900,
                         ),
                       ),
+                    ),
+                  if (loginError)
+                    InkWell(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Esqueceu sua senha?",
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          ),
+                          Text(
+                            "Recuperar",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Constants.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) =>
+                              RecoveryDialog(email: emailController.text),
+                        );
+                      },
                     ),
                   SizedBox(height: 30),
                   loading

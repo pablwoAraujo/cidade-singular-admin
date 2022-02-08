@@ -63,6 +63,23 @@ class UserService {
     }
   }
 
+  Future<bool> recovery({required String email}) async {
+    try {
+      var response = await dioService.dio.post("/user/recovery/$email");
+
+      if (response.data["error"]) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      if (e is DioError) {
+        print(e);
+      }
+      return false;
+    }
+  }
+
   Future<User?> update({
     String? name,
     String? description,
