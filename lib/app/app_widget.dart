@@ -6,7 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Slidy',
       theme: ThemeData(
@@ -23,6 +23,8 @@ class AppWidget extends StatelessWidget {
           ),
         ),
       ),
-    ).modular();
+      routeInformationParser: Modular.routeInformationParser,
+      routerDelegate: Modular.routerDelegate,
+    );
   }
 }
