@@ -9,6 +9,7 @@ class User {
   CuratorType? curator_type;
   String picture;
   City? city;
+  int xp;
   User({
     required this.id,
     required this.email,
@@ -18,6 +19,7 @@ class User {
     this.type = UserType.VISITOR,
     this.curator_type,
     this.picture = "",
+    required this.xp,
   });
 
   String get typeV => "";
@@ -32,6 +34,7 @@ class User {
             ? CuratorType._from[map["curator_type"]]
             : null,
         picture = map["picture"],
+        xp = map["xp"],
         city = map["city"] == null || (map['city'] is String)
             ? null
             : City.fromMap(map["city"]);
