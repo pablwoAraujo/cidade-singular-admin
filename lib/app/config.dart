@@ -1,3 +1,3 @@
 class Config {
-  static const String apiURL = "https://cidade-singular-api-dev.herokuapp.com";
+  static const String apiURL = "http://localhost:3000";
 }
